@@ -28,7 +28,6 @@
 
         #timeline {
             width: 100%;
-            height: 600px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -129,53 +128,16 @@
     <!-- <h1>前端发展历史时间线</h1> -->
     <div id="timeline"></div>
 
-    <script>
+    <script type="module">
+        import { eventColors, timelineEvents } from './timeline-data.js';
+
         const container = document.getElementById('timeline');
+        const items = new vis.DataSet(timelineEvents.map(event => ({...event})));
 
-        // 定义事件类型和对应的颜色
-        const eventColors = {
-            'js-standard': '#FF4D4D',     // JavaScript/ECMAScript标准
-            'html-standard': '#4169E1',   // HTML标准
-            'css-standard': '#32CD32',    // CSS标准
-            'other-standard': '#FFD700',  // 其他Web标准
-            'ui-framework': '#FF69B4',    // UI框架
-            'state-framework': '#9400D3', // 状态管理框架
-            'build-tool': '#FF8C00',      // 构建工具
-            'dev-tool': '#00CED1',        // 开发工具
-            'browser': '#8B4513',         // 浏览器
-            'runtime': '#4B0082',         // 运行时
-            'web-standard': '#2F4F4F'     // Web基础标准
-        };
 
-        const items = new vis.DataSet([
-            { id: 1, content: '<a href="https://info.cern.ch/hypertext/WWW/TheProject.html" target="_blank">万维网诞生</a><br>Tim Berners-Lee发明了万维网，创建了第一个网页', start: '1991-03-12', className: 'web-standard' },
-            { id: 2, content: '<a href="https://web.archive.org/web/20070916144913/http://wp.netscape.com/newsref/pr/newsrelease67.html" target="_blank">JavaScript诞生</a><br>Brendan Eich在网景公司创造了JavaScript', start: '1995-05-23', className: 'js-standard' },
-            { id: 3, content: '<a href="https://www.w3.org/TR/CSS2/" target="_blank">CSS2规范发布</a><br>W3C发布CSS Level 2规范，增强了样式能力', start: '1998-05-12', className: 'css-standard' },
-            { id: 4, content: '<a href="https://web.archive.org/web/20110102130249/http://adaptivepath.com/ideas/essays/archives/000385.php" target="_blank">AJAX技术兴起</a><br>Jesse James Garrett提出AJAX概念，改变了Web交互方式', start: '2005-02-18', className: 'js-standard' },
-            { id: 5, content: '<a href="https://blog.jquery.com/2006/08/26/jquery-1-0/" target="_blank">jQuery发布</a><br>jQuery简化了JavaScript编程，统一了浏览器差异', start: '2006-08-26', className: 'ui-framework' },
-            { id: 6, content: '<a href="https://blog.chromium.org/2008/09/welcome-to-chromium_02.html" target="_blank">Chrome发布</a><br>Google发布Chrome浏览器及V8引擎，大幅提升JavaScript性能', start: '2008-09-02', className: 'browser' },
-            { id: 7, content: '<a href="https://github.com/nodejs/node-v0.x-archive/commit/19478ed4b14263c489e872156ca55ff16a07ebe0" target="_blank">Node.js发布</a><br>Ryan Dahl创建了Node.js，JavaScript进入服务器端', start: '2009-05-27', className: 'runtime' },
-            { id: 8, content: '<a href="https://www.w3.org/TR/html5/" target="_blank">HTML5规范确立</a><br>W3C正式推荐HTML5标准，带来革命性的Web功能', start: '2010-10-28', className: 'html-standard' },
-            { id: 9, content: '<a href="https://www.w3.org/Style/CSS/" target="_blank">CSS3模块化</a><br>CSS3采用模块化方式发展，引入了大量新特性', start: '2011-06-07', className: 'css-standard' },
-            { id: 10, content: '<a href="https://reactjs.org/blog/2013/06/05/why-react.html" target="_blank">React发布</a><br>Facebook发布React，开创了组件化开发新纪元', start: '2013-05-29', className: 'ui-framework' },
-            { id: 11, content: '<a href="https://blog.vuejs.org/posts/vue-1-0" target="_blank">Vue.js发布</a><br>尤雨溪发布Vue.js，提供了渐进式JavaScript框架', start: '2014-02-24', className: 'ui-framework' },
-            { id: 12, content: '<a href="https://www.ecma-international.org/ecma-262/6.0/" target="_blank">ES6标准发布</a><br>ECMAScript 2015(ES6)发布，带来重大语言特性更新', start: '2015-06-17', className: 'js-standard' },
-            { id: 13, content: '<a href="https://webassembly.org/" target="_blank">WebAssembly发布</a><br>WebAssembly成为W3C标准，使Web性能达到新高度', start: '2019-12-05', className: 'other-standard' },
-            { id: 14, content: '<a href="https://vitejs.dev/blog/announcing-vite.html" target="_blank">Vite发布</a><br>尤雨溪发布Vite构建工具，开创新一代前端工具链', start: '2020-04-21', className: 'build-tool' },
-            { id: 15, content: '<a href="https://devblogs.microsoft.com/typescript/announcing-typescript-1-0/" target="_blank">TypeScript 1.0发布</a><br>Microsoft发布TypeScript 1.0，为JavaScript添加类型系统', start: '2014-04-02', className: 'js-standard' },
-            { id: 16, content: '<a href="https://blog.angular.io/angular-2-0-0-released-64451a325b13" target="_blank">Angular发布</a><br>Google发布Angular框架，引入依赖注入等企业级特性', start: '2016-09-14', className: 'ui-framework' },
-            { id: 17, content: '<a href="https://developers.google.com/web/progressive-web-apps" target="_blank">PWA概念提出</a><br>Google提出Progressive Web Apps概念，推动Web应用原生化', start: '2015-11-20', className: 'web-standard' },
-            { id: 18, content: '<a href="https://webpack.js.org/blog/2017-01-17-webpack-2-2/" target="_blank">Webpack 2发布</a><br>Webpack发布2.0版本，引入Tree Shaking等优化特性', start: '2017-01-18', className: 'build-tool' },
-            { id: 19, content: '<a href="https://graphql.org/blog/graphql-a-query-language/" target="_blank">GraphQL规范发布</a><br>Facebook发布GraphQL规范，改变API查询方式', start: '2015-09-14', className: 'other-standard' },
-            { id: 20, content: '<a href="https://deno.com/blog/v1" target="_blank">Deno发布</a><br>Ryan Dahl发布Deno 1.0，重新思考Node.js设计', start: '2020-05-13', className: 'runtime' },
-            { id: 21, content: '<a href="https://svelte.dev/blog/svelte-3-rethinking-reactivity" target="_blank">Svelte 3发布</a><br>Rich Harris发布Svelte 3，开创编译时框架新范式', start: '2019-04-22', className: 'ui-framework' },
-            { id: 22, content: '<a href="https://github.blog/2021-06-29-introducing-github-copilot-ai-pair-programmer/" target="_blank">GitHub Copilot发布</a><br>GitHub发布AI编程助手Copilot，开启AI辅助编程新时代', start: '2021-06-29', className: 'dev-tool' },
-            { id: 23, content: '<a href="https://nextjs.org/blog/next-13" target="_blank">Next.js 13发布</a><br>Vercel发布Next.js 13，引入App Router等革命性特性', start: '2022-10-25', className: 'ui-framework' },
-            { id: 24, content: '<a href="https://bun.sh/blog/bun-v1.0" target="_blank">Bun 1.0发布</a><br>Jarred Sumner发布Bun 1.0，为JavaScript带来极致性能', start: '2023-09-08', className: 'runtime' }
-        ]);
 
         const options = {
-            height: '600px',
+            height: "100vh",
             min: new Date('1990'),
             max: new Date('2024'),
             zoomMin: 1000 * 60 * 60 * 24 * 30 * 12, // 一年
